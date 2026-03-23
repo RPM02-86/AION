@@ -86,9 +86,7 @@ def generate_equipment_specs():
         },
         "Bombas_Processo": {
             "mtbf_alvo_horas": 720, "mttr_alvo_horas": 0.5,
-            "disponibilidade_alvo": 0.90, "area":
-
-
+            "disponibilidade_alvo": 0.90, "area": "Utilidades",
             "criticidade": "Alta", "capacidade": "—",
             "marca": "—", "modelo": "—",
         },
