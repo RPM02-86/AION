@@ -31,12 +31,52 @@ Use as abas abaixo para navegar:
 # CARREGA DADOS SIMULADOS
 # ---------------------------------------------------------
 @st.cache_data
-def load_data():
+def load_sample_data():
     df = generate_maintenance_data()
     az = ReliabilityAnalyzer(df)
     return df, az
 
-df, az = load_data()
+@st.cache_data
+def load_real_data(uploaded_file):
+    import pandas as pd
+
+    if uploaded_file.name.endswith(".csv"):
+        df = pd.read_csv(uploaded_file, sep=",")
+    else:
+        df = pd.read_excel(uploaded_file)
+
+    # garantir tipos
+    df["data_ocorrencia"] = pd.to_datetime(df["data_ocorrencia"])
+    df["tempo_reparo_horas"] = df["tempo_reparo_horas"].astype(float)
+    df["custo_reparo"] = df["custo_reparo"].astype(float)
+    if "producao_perdida_caixas" not in df.columns:
+        df["producao_perdida_caixas"] = 0
+    if "resolvido" not in df.columns:
+        df["resolvido"] = True
+
+    az = ReliabilityAnalyzer(df)
+    return df, az
+
+# ---------------------------------------------------------
+# ESCOLHA DE DADOS: SIMULADO x REAL
+# ---------------------------------------------------------
+st.sidebar.subheader("Fonte de dados")
+modo_dados = st.sidebar.radio(
+    "Usar quais dados?",
+    ["Simulados (demo)", "Arquivo real (CSV/Excel)"],
+)
+
+uploaded_file = None
+if modo_dados == "Arquivo real (CSV/Excel)":
+    uploaded_file = st.sidebar.file_uploader(
+        "Envie o arquivo de Ordens de Serviço",
+        type=["csv", "xlsx", "xls"],
+    )
+
+if modo_dados == "Arquivo real (CSV/Excel)" and uploaded_file is not None:
+    df, az = load_real_data(uploaded_file)
+else:
+    df, az = load_sample_data()
 
 # ---------------------------------------------------------
 # ABA PRINCIPAL
