@@ -37,7 +37,45 @@ PASTA = st.secrets.get("https://lapoasis.sharepoint.com/:f:/s/OASIS/IgDSoHa1Tnvq
 ARQUIVO = st.secrets.get("https://lapoasis.sharepoint.com/:x:/s/OASIS/IQAg693YO9jpQJPS79HCqFFLAQgLKMn2B-mhoGORLL8FSLc?e=HQUvNd", "")
 SP_USER = st.secrets.get("renato.oliveira@oasis.ind.br", "")
 SP_PASS = st.secrets.get("Ro@lap2023", "")
+@st.cache_data
+def load_sample_data():
+    df = generate_maintenance_data()
+    az = ReliabilityAnalyzer(df)
+    return df, az
 
+@st.cache_data
+def load_real_data(uploaded_file):
+    import pandas as pd
+    if uploaded_file.name.endswith(".csv"):
+        df = pd.read_csv(uploaded_file, sep=",")
+    else:
+        df = pd.read_excel(uploaded_file)
+    df["data_ocorrencia"] = pd.to_datetime(df["data_ocorrencia"])
+    df["tempo_reparo_horas"] = df["tempo_reparo_horas"].astype(float)
+    df["custo_reparo"] = df["custo_reparo"].astype(float)
+    if "producao_perdida_caixas" not in df.columns:
+        df["producao_perdida_caixas"] = 0
+    if "resolvido" not in df.columns:
+        df["resolvido"] = True
+    az = ReliabilityAnalyzer(df)
+    return df, az
+
+# ← NOVA FUNÇÃO ADICIONADA
+@st.cache_data
+def load_sharepoint_data():
+    df = ler_arquivo_sharepoint(
+        SITE_URL, PASTA, ARQUIVO, SP_USER, SP_PASS
+    )
+    df["data_ocorrencia"] = pd.to_datetime(df["data_ocorrencia"])
+    df["tempo_reparo_horas"] = df["tempo_reparo_horas"].astype(float)
+    df["custo_reparo"] = df["custo_reparo"].astype(float)
+    if "producao_perdida_caixas" not in df.columns:
+        df["producao_perdida_caixas"] = 0
+    if "resolvido" not in df.columns:
+        df["resolvido"] = True
+    az = ReliabilityAnalyzer(df)
+    return df, az
+    
 # ---------------------------------------------------------
 # ESCOLHA DE DADOS: SIMULADO x REAL
 # ---------------------------------------------------------
