@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from sharepoint_utils import ler_arquivo_sharepoint
+# from sharepoint_utils import ler_arquivo_sharepoint
 
 from sample_data import generate_maintenance_data
 from analyzer import ReliabilityAnalyzer
