@@ -42,3 +42,6 @@ SENHA   = st.secrets["Ro.Lap@2023"]
 
 # Carrega os dados reais diretamente do SharePoint
 df_real = ler_arquivo_sharepoint(SITE_URL, PASTA, ARQUIVO, USUARIO, SENHA)
+@st.cache_data(ttl=3600)  # 1 hora de validade
+def obter_dados_sharepoint():
+    return ler_arquivo_sharepoint(...)
