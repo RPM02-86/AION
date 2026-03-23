@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 # from sharepoint_utils import ler_arquivo_sharepoint
 
-from sample_data import generate_maintenance_data
+from sample_data import generate_equipment_specs
 from analyzer import ReliabilityAnalyzer
 from agent import AIONAgent
 
