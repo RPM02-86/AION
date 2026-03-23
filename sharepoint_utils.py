@@ -33,3 +33,12 @@ def ler_arquivo_sharepoint(
         raise ValueError("Formato de arquivo não suportado (use .csv ou .xlsx)")
 
     return df
+# Configurações – você pode colocar no .streamlit/secrets.toml ou em st.secrets
+SITE_URL = "https://lapoasis.sharepoint.com/sites/OASIS"
+PASTA = "https://lapoasis.sharepoint.com/:x:/s/OASIS/IQAg693YO9jpQJPS79HCqFFLAQgLKMn2B-mhoGORLL8FSLc?e=HQUvNd"   # caminho relativo ao site
+ARQUIVO = "historico_os.xlsx"
+USUARIO = st.secrets["renato.oliveira@oasis.ind.br"]
+SENHA   = st.secrets["Ro.Lap@2023"]
+
+# Carrega os dados reais diretamente do SharePoint
+df_real = ler_arquivo_sharepoint(SITE_URL, PASTA, ARQUIVO, USUARIO, SENHA)
