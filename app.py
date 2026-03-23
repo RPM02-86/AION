@@ -31,32 +31,12 @@ Use as abas abaixo para navegar:
 # ---------------------------------------------------------
 # CARREGA DADOS SIMULADOS
 # ---------------------------------------------------------
-@st.cache_data
-def load_sample_data():
-    df = generate_maintenance_data()
-    az = ReliabilityAnalyzer(df)
-    return df, az
-
-@st.cache_data
-def load_real_data(uploaded_file):
-    import pandas as pd
-
-    if uploaded_file.name.endswith(".csv"):
-        df = pd.read_csv(uploaded_file, sep=",")
-    else:
-        df = pd.read_excel(uploaded_file)
-
-    # garantir tipos
-    df["data_ocorrencia"] = pd.to_datetime(df["data_ocorrencia"])
-    df["tempo_reparo_horas"] = df["tempo_reparo_horas"].astype(float)
-    df["custo_reparo"] = df["custo_reparo"].astype(float)
-    if "producao_perdida_caixas" not in df.columns:
-        df["producao_perdida_caixas"] = 0
-    if "resolvido" not in df.columns:
-        df["resolvido"] = True
-
-    az = ReliabilityAnalyzer(df)
-    return df, az
+# Configurações de SharePoint (ajustar para sua realidade)
+SITE_URL = st.secrets.get("https://lapoasis.sharepoint.com/sites/OASIS", "")
+PASTA = st.secrets.get("https://lapoasis.sharepoint.com/:f:/s/OASIS/IgDSoHa1TnvqRYZZnWYaNCsaAdQK8NfehTr6XMuR3Ew_DT4?e=NjknjC", "")
+ARQUIVO = st.secrets.get("https://lapoasis.sharepoint.com/:x:/s/OASIS/IQAg693YO9jpQJPS79HCqFFLAQgLKMn2B-mhoGORLL8FSLc?e=HQUvNd", "")
+SP_USER = st.secrets.get("renato.oliveira@oasis.ind.br", "")
+SP_PASS = st.secrets.get("Ro@lap2023", "")
 
 # ---------------------------------------------------------
 # ESCOLHA DE DADOS: SIMULADO x REAL
